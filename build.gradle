@@ -5,8 +5,8 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.noarg' version "1.8.10"
 }
 
-group 'com.home'
-version '1.0-SNAPSHOT'
+group 'home'
+version '1.0'
 
 allOpen {
     annotations(
