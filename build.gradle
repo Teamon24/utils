@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.plugin.allopen' version "1.8.10"
+    id 'org.jetbrains.kotlin.jvm' version "1.8.10"
+    id 'org.jetbrains.kotlin.plugin.noarg' version "1.8.10"
+}
+
+group 'com.home'
+version '1.0-SNAPSHOT'
+
+allOpen {
+    annotations(
+            "javax.persistence.Entity",
+            "javax.persistence.MappedSuperclass", "javax.persistence.Embedabble")
+}
+
+noArg {
+    annotations(
+            "com.fasterxml.jackson.annotation.JsonSubTypes",
+            "com.fasterxml.jackson.databind.annotation.JsonSerialize"
+    )
+}
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main.java.srcDirs = ['src/main/java', 'src/main/kotlin']
+    main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
+    main.resources.srcDirs = ['src/main/resources']
+}
+
+sourceSets {
+    test.java.srcDirs = ['src/test/java', 'src/test/kotlin']
+    test.kotlin.srcDirs = ['src/test/java', 'src/test/kotlin']
+    test.resources.srcDirs = ['src/test/resources']
+}
+
+compileKotlin { kotlinOptions.jvmTarget = '16' }
+compileTestKotlin { kotlinOptions.jvmTarget = '16' }
+
+def kotlinVersion = "1.8.10"
+dependencies {
+
+    //KOTLIN --------------------------------------------------------------
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    }
+
+    //TESTS --------------------------------------------------------------
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    }
+}
+
+
