@@ -6,3 +6,5 @@ inline fun String.ifNotEmpty(function: () -> Unit) {
     }
 }
 
+inline fun String.delete(toDelete: String) = replace(toDelete, "")
+
