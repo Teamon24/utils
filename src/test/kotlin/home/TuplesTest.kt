@@ -55,22 +55,24 @@ class TuplesTest {
 
     @Test
     fun testToList() {
-        assertEquals(pair.toList(), list(2, any))
-        assertEquals(triple.toList(), list(3, any))
-        assertEquals(quadruple.toList(), list(4, any))
-        assertEquals(quintuple.toList(), list(5, any))
-        assertEquals(septuple.toList(), list(6, any))
-        assertEquals(octuple.toList(), list(7, any))
+        assertEquals(list(2, any), pair.toList())
+        assertEquals(list(3, any), triple.toList())
+        assertEquals(list(4, any), quadruple.toList())
+        assertEquals(list(5, any), quintuple.toList())
+        assertEquals(list(6, any), sextuple.toList())
+        assertEquals(list(7, any), septuple.toList())
+        assertEquals(list(8, any), octuple.toList())
     }
 
     @Test
     fun testToArray() {
-        assertArrayEquals(pair.toArray() as Array<Any>, array(2, any))
-        assertArrayEquals(triple.toArray() as Array<Any>, array(3, any))
-        assertArrayEquals(quadruple.toArray() as Array<Any>, array(4, any))
-        assertArrayEquals(quintuple.toArray() as Array<Any>, array(5, any))
-        assertArrayEquals(septuple.toArray() as Array<Any>, array(6, any))
-        assertArrayEquals(octuple.toArray() as Array<Any>, array(7, any))
+        assertArrayEquals(array(2, any), pair.toArray() as Array<Any>)
+        assertArrayEquals(array(3, any), triple.toArray() as Array<Any>)
+        assertArrayEquals(array(4, any), quadruple.toArray() as Array<Any>)
+        assertArrayEquals(array(5, any), quintuple.toArray() as Array<Any>)
+        assertArrayEquals(array(6, any), sextuple.toArray() as Array<Any>)
+        assertArrayEquals(array(7, any), septuple.toArray() as Array<Any>)
+        assertArrayEquals(array(8, any), octuple.toArray() as Array<Any>)
     }
 
     private fun list(size: Int, any: Any): List<Any> =
