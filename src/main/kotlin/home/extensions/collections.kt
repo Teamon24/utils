@@ -6,6 +6,12 @@ object CollectionsExtensions {
     inline operator fun <T> Collection<T>.plus(that: T) = ArrayList<T>(this.size + 1).apply { addAll(this); add(that) }
 
     @JvmStatic
+    inline operator fun <T> T.plus(list: MutableList<in T>): MutableList<in T> = list.also { it.add(0, this) }
+
+    @JvmStatic
+    inline operator fun <T> T.plus(list: List<T>): List<T> = ArrayList(list).also { it.add(0, this) }
+
+    @JvmStatic
     fun <K, V> Map<K, V>.exclude(exception: K) = filter { it.key != exception }
 
     @JvmStatic

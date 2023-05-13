@@ -45,8 +45,6 @@ object AnysExtensions {
         this?.body()
     }
 
-    @JvmStatic
-    inline operator fun <T> T.plus(list: MutableList<in T>) = list.also { it.add(0, this) }
 
     @JvmStatic
     inline fun <T> T.removeFrom(collection: MutableCollection<T>) = collection.remove(this)
