@@ -31,6 +31,15 @@ object CollectionsExtensions {
     inline val <T> Collection<T>.hasElements get() = size > 1
 
     @JvmStatic
+    inline val <T> Collection<T>.hasElement get() = size == 1
+
+    /**
+     * returns true if contains only one element that was passed into function.
+     */
+    @JvmStatic
+    fun <T> Collection<T>.containsOnly(t: T): Boolean = hasElement && contains(t)
+
+    @JvmStatic
     inline val <T> Collection<T>.isNotEmpty get() = isNotEmpty()
 
     @JvmStatic
