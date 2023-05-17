@@ -50,14 +50,17 @@ object CollectionsExtensions {
      * - empty;
      */
     @JvmStatic
-    inline fun <E, C: Collection<E>> Collection<C>.ifAbsent(c: C, onAbsence: Collection<C>.() -> Unit) {
+    inline fun <E, C: Collection<E>> MutableCollection<C>.ifAbsent(
+        collection: C,
+        onAbsence: MutableCollection<C>.() -> Unit
+    ) {
         isEmpty { onAbsence(); return }
 
-        c.isEmpty {
+        collection.isEmpty {
             this.hasEmpty { return }
         }
 
-        find { size == c.size && it.containsAll(c) } ?: onAbsence()
+        find { size == collection.size && it.containsAll(collection) } ?: onAbsence()
     }
 
     @JvmStatic

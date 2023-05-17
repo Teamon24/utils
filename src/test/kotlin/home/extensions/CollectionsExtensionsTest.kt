@@ -18,7 +18,7 @@ class CollectionsExtensionsTest {
     @ParameterizedTest
     @MethodSource("ifAbsentTestData")
     fun <E, T: Collection<E>> ifAbsentFalseTest(
-        collection: Collection<T>, absent: T, onAbsent: E, expected: E?
+        collection: MutableCollection<T>, absent: T, onAbsent: E, expected: E?
     ) {
         var actual: E? = onPresent
         collection.ifAbsent(absent) { actual = onAbsent }
@@ -29,7 +29,7 @@ class CollectionsExtensionsTest {
         private val list1 = listOf(0 to 0, 0 to 1)
         private val list2 = listOf(0 to 1, 1 to 2)
         private const val onAbsent = Int.MAX_VALUE
-        private val lists = listOf(list1, list2)
+        private val lists = mutableListOf(list1, list2)
         val onPresent = null
 
         @JvmStatic
