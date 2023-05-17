@@ -1,5 +1,8 @@
 package home.extensions
 
+import home.extensions.BooleansExtensions.invoke
+import home.extensions.BooleansExtensions.so
+
 object CollectionsExtensions {
 
     @JvmStatic
@@ -38,6 +41,27 @@ object CollectionsExtensions {
      */
     @JvmStatic
     fun <T> Collection<T>.containsOnly(t: T): Boolean = hasElement && contains(t)
+
+    /**
+     * invokes lambda if:
+     * - receiving collections are empty;
+     * - passed collection:
+     * - absent;
+     * - empty;
+     */
+    @JvmStatic
+    inline fun <E, C: Collection<E>> Collection<C>.ifAbsent(c: C, onAbsence: Collection<C>.() -> Unit) {
+        isEmpty { onAbsence(); return }
+
+        c.isEmpty {
+            this.hasEmpty { return }
+        }
+
+        find { size == c.size && it.containsAll(c) } ?: onAbsence()
+    }
+
+    @JvmStatic
+    inline fun <E, C: Collection<E>> Collection<C>.hasEmpty(onTrue: () -> Unit) = any { it.isEmpty() }.so(onTrue)
 
     @JvmStatic
     inline val <T> Collection<T>.isNotEmpty get() = isNotEmpty()
