@@ -45,22 +45,20 @@ object CollectionsExtensions {
     /**
      * invokes lambda if:
      * - receiving collections are empty;
-     * - passed collection:
-     * - absent;
-     * - empty;
+     * - passed collection: absent or empty;
      */
     @JvmStatic
     inline fun <E, C: Collection<E>> MutableCollection<C>.ifAbsent(
-        collection: C,
+        absent: C,
         onAbsence: MutableCollection<C>.() -> Unit
     ) {
         isEmpty { onAbsence(); return }
 
-        collection.isEmpty {
+        absent.isEmpty {
             this.hasEmpty { return }
         }
 
-        find { size == collection.size && it.containsAll(collection) } ?: onAbsence()
+        find { collection -> collection.size == absent.size && collection.containsAll(absent) } ?: onAbsence()
     }
 
     @JvmStatic

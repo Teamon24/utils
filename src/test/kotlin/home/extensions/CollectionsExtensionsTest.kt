@@ -29,7 +29,7 @@ class CollectionsExtensionsTest {
         private val list1 = listOf(0 to 0, 0 to 1)
         private val list2 = listOf(0 to 1, 1 to 2)
         private const val onAbsent = Int.MAX_VALUE
-        private val lists = mutableListOf(list1, list2)
+        private val lists = mutableListOf(list1, list2, listOf(1 to 10), listOf(2 to 4))
         val onPresent = null
 
         @JvmStatic
