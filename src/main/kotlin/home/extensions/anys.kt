@@ -57,6 +57,12 @@ object AnysExtensions {
 
     @JvmStatic
     inline operator fun <T> T.plus(that: T) = listOf(this, that)
+
+    @JvmStatic
+    inline fun <T> T.isAny(vararg ts: T) = ts.any { it == this }
+
+    @JvmStatic
+    inline fun <T> T.isAny(ts: Collection<T>) = ts.any { it == this }
 }
 
 
