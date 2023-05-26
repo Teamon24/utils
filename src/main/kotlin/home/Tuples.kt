@@ -28,21 +28,21 @@ constructor(val first: A, val second: B, val third: C, val forth: D, val fifth: 
 private fun toString(anys: Array<*>): String = "(${anys.joinToString(separator = ", ", truncated = "") { it.toString() }})"
 
 
-inline fun <reified T> Pair      <T, T>                . toList(): List<T> = listOf(first, second)
-inline fun <reified T> Triple    <T, T, T>             . toList(): List<T> = listOf(first, second, third)
-inline fun <reified T> Quadruple<T, T, T, T>           . toList(): List<T> = listOf(first, second, third, forth)
-inline fun <reified T> Quintuple<T, T, T, T, T>        . toList(): List<T> = listOf(first, second, third, forth, fifth)
-inline fun <reified T> Sextuple<T, T, T, T, T, T>      . toList(): List<T> = listOf(first, second, third, forth, fifth, sixth)
-inline fun <reified T> Septuple<T, T, T, T, T, T, T>   . toList(): List<T> = listOf(first, second, third, forth, fifth, sixth, seventh)
-inline fun <reified T> Octuple<T, T, T, T, T, T, T, T> . toList(): List<T> = listOf(first, second, third, forth, fifth, sixth, seventh, eighth)
+inline fun<reified T> Pair     <T, T>                  .toList(): List<T> = listOf(first, second)
+inline fun<reified T> Triple   <T, T, T>               .toList(): List<T> = listOf(first, second, third)
+inline fun<reified T> Quadruple<T, T, T, T>            .toList(): List<T> = listOf(first, second, third, forth)
+inline fun<reified T> Quintuple<T, T, T, T, T>         .toList(): List<T> = listOf(first, second, third, forth, fifth)
+inline fun<reified T> Sextuple <T, T, T, T, T, T>      .toList(): List<T> = listOf(first, second, third, forth, fifth, sixth)
+inline fun<reified T> Septuple <T, T, T, T, T, T, T>   .toList(): List<T> = listOf(first, second, third, forth, fifth, sixth, seventh)
+inline fun<reified T> Octuple  <T, T, T, T, T, T, T, T>.toList(): List<T> = listOf(first, second, third, forth, fifth, sixth, seventh, eighth)
 
-inline fun <reified T> Pair      <T, T>                . toArray(): Array<T> = arrayOf(first, second)
-inline fun <reified T> Triple    <T, T, T>             . toArray(): Array<T> = arrayOf(first, second, third)
-inline fun <reified T> Quadruple<T, T, T, T>           . toArray(): Array<T> = arrayOf(first, second, third, forth)
-inline fun <reified T> Quintuple<T, T, T, T, T>        . toArray(): Array<T> = arrayOf(first, second, third, forth, fifth)
-inline fun <reified T> Sextuple<T, T, T, T, T, T>      . toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth)
-inline fun <reified T> Septuple<T, T, T, T, T, T, T>   . toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth, seventh)
-inline fun <reified T> Octuple<T, T, T, T, T, T, T, T> . toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth, seventh, eighth)
+inline fun<reified T> Pair     <T, T>                  .toArray(): Array<T> = arrayOf(first, second)
+inline fun<reified T> Triple   <T, T, T>               .toArray(): Array<T> = arrayOf(first, second, third)
+inline fun<reified T> Quadruple<T, T, T, T>            .toArray(): Array<T> = arrayOf(first, second, third, forth)
+inline fun<reified T> Quintuple<T, T, T, T, T>         .toArray(): Array<T> = arrayOf(first, second, third, forth, fifth)
+inline fun<reified T> Sextuple <T, T, T, T, T, T>      .toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth)
+inline fun<reified T> Septuple <T, T, T, T, T, T, T>   .toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth, seventh)
+inline fun<reified T> Octuple  <T, T, T, T, T, T, T, T>.toArray(): Array<T> = arrayOf(first, second, third, forth, fifth, sixth, seventh, eighth)
 
 /* *************************************************************************************************************************************** */
 /* **************************************************************** Triple-3 ************************************************************* */

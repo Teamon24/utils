@@ -1,30 +1,31 @@
 package home.extensions
 
-import home.extensions.BooleansExtensions.invoke
-import home.extensions.BooleansExtensions.so
-
 object CollectionsExtensions {
 
     @JvmStatic inline operator fun <T> Collection<T>.plus(that: T) = ArrayList<T>(this.size + 1).apply { addAll(this); add(that) }
     @JvmStatic inline operator fun <T> T.plus(list: List<T>): List<T> = ArrayList(list).also { it.add(0, this) }
 
-    @JvmStatic fun <K, V> Map<K, V>.exclude(exception: K) = filter { it.key != exception }
-    @JvmStatic fun <K, V> Map<K, V>.excludeAll(exceptions: Collection<K>) = filter { it.key !in exceptions }
     @JvmStatic fun <K> Collection<K>.exclude(exception: K) = filter { it != exception }
     @JvmStatic fun <K> Collection<K>.exclude(vararg exceptions: K) = filter { it !in exceptions }
 
-    fun <E> List<E>.asMutableList(): MutableList<E> {
+    /**
+     * return "this" if "this" is MutableList else creates MutableList with elements of "this".
+     */
+    fun <E> Collection<E>.asMutableList(): MutableList<E> {
         if (this is MutableList<E>) {
             return this
         }
         return this.toMutableList()
     }
 
+    /**
+     * returns "true" if size > 1
+     */
     @JvmStatic inline val <T> Collection<T>.hasElements get() = size > 1
     @JvmStatic inline val <T> Collection<T>.hasElement get() = size == 1
 
     /**
-     * returns true if contains only one element that was passed into function.
+     * returns "true" if contains only one element that was passed into function.
      */
     @JvmStatic fun <T> Collection<T>.containsOnly(t: T): Boolean = hasElement && contains(t)
 
@@ -48,12 +49,12 @@ object CollectionsExtensions {
     }
 
     @JvmStatic inline fun <E, C: Collection<E>> Collection<C>.hasEmpty(onTrue: () -> Unit) =
-        any { it.isEmpty() }.so(onTrue)
+        any { it.isEmpty() }.apply { if(this) onTrue() }
 
     @JvmStatic inline val <T> Collection<T>.isNotEmpty get() = isNotEmpty()
     @JvmStatic inline val <T> Collection<T>.isEmpty get() = isEmpty()
 
-    @JvmStatic inline fun <T> Collection<T>.isNotEmpty(onTrue: () -> Unit) = isNotEmpty().apply { so(onTrue) }
-    @JvmStatic inline fun <T> Collection<T>.isEmpty(onTrue: () -> Unit) = isEmpty().apply { so(onTrue) }
+    @JvmStatic inline fun <T> Collection<T>.isNotEmpty(onTrue: () -> Unit) = isNotEmpty().apply { if(this) onTrue() }
+    @JvmStatic inline fun <T> Collection<T>.isEmpty(onTrue: () -> Unit) = isEmpty().apply { if(this) onTrue() }
 
 }

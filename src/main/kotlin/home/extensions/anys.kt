@@ -32,9 +32,7 @@ object AnysExtensions {
 
     @JvmStatic inline fun <T> Int.repeat(function: () -> T) = repeat(this) { function() }
 
-    @JvmStatic inline operator fun <T> T?.invoke(body: T.() -> Unit) {
-        this?.body()
-    }
+    @JvmStatic inline operator fun <T> T.invoke(body: T.() -> Unit) { this?.body() }
 
     @JvmStatic inline fun <T> T.removeFrom(collection: MutableCollection<T>) = collection.remove(this)
     @JvmStatic inline fun <T> T.removeFrom(map: MutableMap<T, *>) = map.remove(this)
