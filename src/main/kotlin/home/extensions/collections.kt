@@ -7,6 +7,7 @@ object CollectionsExtensions {
 
     @JvmStatic fun <K> Collection<K>.exclude(exception: K) = filter { it != exception }
     @JvmStatic fun <K> Collection<K>.exclude(vararg exceptions: K) = filter { it !in exceptions }
+    @JvmStatic fun <K> Collection<K>.exclude(predicate: (K) -> Boolean) = filter { !(predicate(it)) }
 
     /**
      * return "this" if "this" is MutableList else creates MutableList with elements of "this".

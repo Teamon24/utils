@@ -1,9 +1,9 @@
 package home.extensions
 
 import home.extensions.BooleansExtensions.so
+import home.extensions.StringsExtensions.lowercaseFirst
 
 object AnysExtensions {
-
 
     /**
      * org.horns.hooves.Horn@12as3 -> Horn@12as3
@@ -48,6 +48,8 @@ object AnysExtensions {
 
     @JvmStatic inline val <T> T?.isNull get() = this == null
     @JvmStatic inline fun <T> T?.ifNull(onTrue: () -> Unit) = isNull.so(onTrue)
+
+    @JvmStatic inline val Any.lowercaseFirstSimpleName: String get() = javaClass.simpleName.lowercaseFirst
 }
 
 
