@@ -8,18 +8,6 @@ plugins {
 group 'home'
 version '1.0'
 
-allOpen {
-    annotations(
-            "javax.persistence.Entity",
-            "javax.persistence.MappedSuperclass", "javax.persistence.Embedabble")
-}
-
-noArg {
-    annotations(
-            "com.fasterxml.jackson.annotation.JsonSubTypes",
-            "com.fasterxml.jackson.databind.annotation.JsonSerialize"
-    )
-}
 
 test {
     useJUnitPlatform()
