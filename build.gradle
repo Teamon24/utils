@@ -29,15 +29,14 @@ sourceSets {
     test.resources.srcDirs = ['src/test/resources']
 }
 
-compileKotlin { kotlinOptions.jvmTarget = '16' }
-compileTestKotlin { kotlinOptions.jvmTarget = '16' }
+compileKotlin { kotlinOptions.jvmTarget = '17' }
+compileTestKotlin { kotlinOptions.jvmTarget = '17' }
 
 def kotlinVersion = "1.8.10"
 dependencies {
 
     //KOTLIN --------------------------------------------------------------
     dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
     }
 
