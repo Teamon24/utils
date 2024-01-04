@@ -7,44 +7,45 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.provider.Arguments
 
+
 /**
  * Test for class [JUnit5ArgumentsDsl].
  */
 internal class JUnit5ArgumentsDslTest {
 
-    private val first = arrayOf(1, "1", 1.0)
-    private val second = arrayOf(10, "10", 10.0)
+    private val repeats = 3
+    private val string = "string"
+    private val range = 1..repeats
+
+    private val firstArgs = arrayOf(1, "1", 1.0)
+    private val secondArgs = arrayOf(10, "10", 10.0)
+    private inline val DslContainer<Any?>.addThirdArgs: () -> Unit get() = { repeat(repeats) { +string } }
 
     @Test
     fun dslTest() {
-        val string = "string"
-        val range = 1..3
-        val third = range.map { string }.toTypedArray()
-
         list {
-            args { + first }
-            args { + second }
-            args { range.forEach { _ -> +string } }
+            args { +firstArgs }
+            args { +secondArgs }
+            args { addThirdArgs() }
         }.let { argsList ->
-            assert(third, argsList)
+            assert(argsList)
         }
 
         stream {
-            args { + first }
-            args { + second }
-            args { range.forEach { _ -> +string } }
+            args { +firstArgs }
+            args { +secondArgs }
+            args { addThirdArgs() }
         }.let { stream ->
             val argsList = stream.toList()
-            assert(third, argsList)
+            assert(argsList)
         }
     }
 
     private fun assert(
-        third: Array<String>,
         argsList: MutableList<Arguments>
     ) {
-        Assertions.assertArrayEquals(first, argsList[0].get())
-        Assertions.assertArrayEquals(second, argsList[1].get())
-        Assertions.assertArrayEquals(third, argsList[2].get())
+        Assertions.assertArrayEquals(firstArgs, argsList[0].get())
+        Assertions.assertArrayEquals(secondArgs, argsList[1].get())
+        Assertions.assertArrayEquals(range.map { string }.toTypedArray(), argsList[2].get())
     }
 }

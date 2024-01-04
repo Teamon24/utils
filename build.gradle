@@ -1,8 +1,21 @@
+buildscript {
+    ext.kotlinVersion = "1.8.10"
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.plugin.allopen' version "1.8.10"
-    id 'org.jetbrains.kotlin.jvm' version "1.8.10"
-    id 'org.jetbrains.kotlin.plugin.noarg' version "1.8.10"
+    id 'org.jetbrains.kotlin.plugin.allopen' version "$kotlinVersion"
+    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    id 'org.jetbrains.kotlin.plugin.noarg' version "$kotlinVersion"
 }
 
 group 'home'
@@ -32,12 +45,14 @@ sourceSets {
 compileKotlin { kotlinOptions.jvmTarget = '17' }
 compileTestKotlin { kotlinOptions.jvmTarget = '17' }
 
-def kotlinVersion = "1.8.10"
+
 dependencies {
 
     //KOTLIN --------------------------------------------------------------
     dependencies {
         testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+        testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2"
     }
 
     //TESTS --------------------------------------------------------------

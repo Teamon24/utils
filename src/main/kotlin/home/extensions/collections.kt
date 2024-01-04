@@ -23,6 +23,10 @@ object CollectionsExtensions {
      * returns "true" if size > 1
      */
     @JvmStatic inline val <T> Collection<T>.hasElements get() = size > 1
+
+    /**
+     * returns "true" if size == 1
+     */
     @JvmStatic inline val <T> Collection<T>.hasElement get() = size == 1
 
     /**
