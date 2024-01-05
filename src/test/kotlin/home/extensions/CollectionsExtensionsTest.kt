@@ -1,6 +1,8 @@
 package home.extensions
 
 import home.IndicesCartesianProduct
+import home.dsl.JUnit5ArgumentsDsl.args
+import home.dsl.JUnit5ArgumentsDsl.stream
 import home.extensions.CollectionsExtensions.containsOnly
 import home.extensions.CollectionsExtensions.exclude
 import home.extensions.CollectionsExtensions.ifAbsent
@@ -11,7 +13,8 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.test.assertEquals
-import home.extensions.CollectionsExtensions.plus
+import home.extensions.CollectionsExtensions.and
+import home.extensions.CollectionsExtensions.doIf
 
 /**
  * Tests for [CollectionsExtensions].
@@ -19,18 +22,18 @@ import home.extensions.CollectionsExtensions.plus
 class CollectionsExtensionsTest {
 
     /**
-     * Test for [CollectionsExtensions.plus].
+     * Test for [CollectionsExtensions.and].
      */
     @Test
     fun plusTest() {
-        Assertions.assertEquals(listOf(1, 2), 1 + listOf(2))
+        Assertions.assertEquals(listOf(1, 2), 1 and listOf(2))
         Assertions.assertEquals(listOf(1, 2), listOf(1, 2))
 
-        Assertions.assertNotEquals(listOf(1, 2), 1 + listOf(3))
-        Assertions.assertNotEquals(listOf(1, 2), 1 + listOf(2, 3))
+        Assertions.assertNotEquals(listOf(1, 2), 1 and listOf(3))
+        Assertions.assertNotEquals(listOf(1, 2), 1 and listOf(2, 3))
 
-        Assertions.assertNotEquals(listOf(1, 2), listOf(1, 2) + 3)
-        Assertions.assertNotEquals(listOf(1, 2), listOf(1) + 3)
+        Assertions.assertNotEquals(listOf(1, 2), listOf(1, 2) and 3)
+        Assertions.assertNotEquals(listOf(1, 2), listOf(1) and 3)
     }
 
     /**
@@ -78,6 +81,20 @@ class CollectionsExtensionsTest {
         assertEquals(size, collection.size)
     }
 
+    /**
+     * Test for [CollectionsExtensions.doIf].
+     */
+    @ParameterizedTest
+    @MethodSource("doIfTestData")
+    fun doIfTest(
+        collection: Collection<Int>,
+        predicate: (Int) -> Boolean,
+        expected: Collection<Int>
+    ) {
+        val actual = mutableListOf<Int>()
+        collection.doIf(predicate) { actual.add(it) }
+        Assertions.assertIterableEquals(expected, actual)
+    }
 
     companion object {
         private val list1 = listOf(0 to 0, 0 to 1)
@@ -133,7 +150,7 @@ class CollectionsExtensionsTest {
         fun excludeByPredicateTestData(): Stream<Arguments> {
             val blank = " "
             val empty = ""
-            val string = "asfae"
+            val string = "string"
             val elements = arrayListOf(null, blank, string, empty)
             val collections = IndicesCartesianProduct.product(elements, elements)
 
@@ -172,6 +189,7 @@ class CollectionsExtensionsTest {
             val allAreBlankOrNull = { c: Collection<String?> -> c.all { it == null || it.isBlank() } }
             val oneIsBlankOrNull = { c: Collection<String?> -> c.any { it == null || it.isBlank() } }
             val noneIsBlankOrNull = { c: Collection<String?> -> c.none { it == null || it.isBlank() } }
+
             return Stream.of(
                 Arguments.of(
                     collections,
@@ -189,6 +207,20 @@ class CollectionsExtensionsTest {
                     noneIsBlankOrNull
                 ),
             )
+        }
+
+        @JvmStatic
+        fun doIfTestData(): Stream<Arguments> {
+
+            return stream {
+                args {
+                    val collection = MutableList(100) { i -> i } as Collection<Int>
+                    val predicate: (Int) -> Boolean = { it.isEven }
+                    + collection
+                    + predicate
+                    val expected = + collection.filter(predicate)
+                }
+            }
         }
     }
 }

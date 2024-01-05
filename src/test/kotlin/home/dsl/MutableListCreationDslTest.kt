@@ -1,9 +1,7 @@
 package home.dsl
 
-import home.dsl.MutableListCreationDsl.at
-import home.dsl.MutableListCreationDsl.from
 import home.dsl.MutableListCreationDsl.mutableList
-import home.dsl.MutableListCreationDsl.within
+import home.extensions.CollectionsExtensions.and
 import home.extensions.IntRangesExtensions.size
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
@@ -12,7 +10,6 @@ import kotlin.random.Random
 
 
 class MutableListCreationDslTest {
-
 
     private val defaultValue = 0
 
@@ -49,12 +46,13 @@ class MutableListCreationDslTest {
 
             within(sameElementIndices, sameElement)
             from(13) { fromElements }
+            add(maxInt)
         }.apply {
             val expected =
                      elements +
                      withinIndices.toList().dropLast(1).map(double) +
                      listOf(maxInt) +
-                     MutableList(sameElementIndices.size, sameElement) + fromElements
+                     MutableList(sameElementIndices.size, sameElement) + fromElements + listOf(maxInt)
 
             assertIterableEquals(expected, this)
         }
@@ -72,31 +70,30 @@ class MutableListCreationDslTest {
         val withinIndices = 5..7
         val start = 9
         val fromElements = start..start + 3
+        val intMin = Int.MIN_VALUE
 
         mutableList(size = 0, defaultValue) {
             at(unit) { unit }
             within(withinIndices) { index -> index }
             from(start) { fromElements.toList() }
+            set(start + fromElements.size, unit)
+            add(0, intMin)
         }.apply {
             val default1 = defaultValues(0, unit)
             val default3 = defaultValues(unit + 1, withinIndices.first)
             val default5 = defaultValues(withinIndices.last + 1, fromElements.first)
 
             val expected =
-                default1 +
+                    intMin and default1 +
                     listOf(unit) +
                     default3 +
                     withinIndices.toList() +
                     default5 +
-                    fromElements.toList()
+                    fromElements.toList() +
+                    listOf(unit)
             assertIterableEquals(expected, this)
         }
     }
 
     private fun defaultValues(first: Int, lastExclusive: Int) = (first until lastExclusive).map { 0 }.toList()
-
-    companion object {
-        const val a =""
-    }
-
 }

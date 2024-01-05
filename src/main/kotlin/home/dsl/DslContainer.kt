@@ -5,19 +5,6 @@ value class DslContainer<E>(val elements: MutableList<E> = mutableListOf()) {
     inline operator fun E.unaryPlus(): E { return also { elements.add(it) } }
 
     /**
-     * Переменные range-типа необходимо брать в скобки,
-     * иначе первым будет выполнен метод [Int.unaryPlus]:
-     *
-     *     'не работает'         'работает'
-     *      dsl { +(1..10) } 'vs' dsl { +1 .. 10 }
-     *
-     */
-    inline operator fun Iterable<E>  . unaryPlus(): Iterable<E>   { return also { elements.addAll(it) } }
-    inline operator fun Collection<E>. unaryPlus(): Collection<E> { return also { elements.addAll(it) } }
-    inline operator fun Array<out E> . unaryPlus(): Array<out E>  { return also { elements.addAll(it) } }
-
-
-    /**
      * Метод был добавлен, т.к. [DslContainer.unaryPlus] не может перекрыть [Int.unaryPlus], [Double.unaryPlus]
      *
      *        'не добавляет в dls-контейнер'                'работает'

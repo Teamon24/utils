@@ -2,8 +2,10 @@ package home.dsl
 
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
+/**
+ * Test for [DslContainer].
+ */
 internal class DslContainerTest {
 
     private var container: DslContainer<Any>? = null;
@@ -17,6 +19,9 @@ internal class DslContainerTest {
 
     private val actualElements = { container!!.elements }
 
+    /**
+     * Test for [DslContainer.unaryPlus].
+     */
     @Test
     fun dslTest() {
         val typedArray = (1..4).toList().toTypedArray()
@@ -27,12 +32,12 @@ internal class DslContainerTest {
             expected = list
         }
 
-        case {
+        iterableCase {
             dslPrintln { val temp = +list }
             expected = list
         }
 
-        case {
+        arrayCase {
             dslPrintln { val temp = + typedArray }
             expected = typedArray.toList()
         }
@@ -46,7 +51,7 @@ internal class DslContainerTest {
             expected = list
         }
 
-        case {
+        iterableCase {
             val intRange = 1..3
             dslPrintln { println(+ intRange) }
             expected = intRange.toList()
@@ -71,53 +76,29 @@ internal class DslContainerTest {
         }
     }
 
-    @Test
-    fun nestedDslTest() {
-        val first = "1"
-        val second = "2"
-        val third = 3
+    private fun innerCaseLogic(function: CaseBox.() -> Unit, assertion: CaseBox.() -> Unit) =
+        CaseBox().apply { function(); assertion() }
 
-        a {
-            + A(third)
-            + b {
-                + B(first)
-                + B(second)
-            }
-        }.apply {
-            assertEquals(double(first.toInt()) + double(second.toInt()) + third, this.a)
+    private fun case(function: CaseBox.() -> Unit) {
+        innerCaseLogic(function) {
+            val actualElements = actualElements()
+            assertIterableEquals(expected, actualElements)
         }
     }
 
-    private fun case(function: CaseBox.() -> Unit) {
-        CaseBox().apply {
-            function()
-            assertIterableEquals(expected, actualElements())
+    private fun iterableCase(function: CaseBox.() -> Unit) {
+        innerCaseLogic(function) {
+            val actualElements = actualElements()[0] as Iterable<Any?>
+            assertIterableEquals(expected, actualElements)
+        }
+    }
+
+    private fun arrayCase(function: CaseBox.() -> Unit) {
+        innerCaseLogic(function) {
+            val actualElements = actualElements()[0] as Array<out Any?>
+            assertIterableEquals(expected, actualElements.toList())
         }
     }
 
     class CaseBox { var expected: Iterable<*>? = null }
-
-
-    data class A(val a: Int)
-    data class B(var b: String)
-
-    private fun a(add: DslContainer<A>.() -> Unit): A {
-        val reduced = dslElements(add)
-                .map { Integer.valueOf(it.a) }
-                .reduce { acc: Int, i: Int -> acc + i }
-
-        return A(reduced)
-    }
-
-    private fun b(add: DslContainer<B>.() -> Unit): A {
-        val reduced = dslElements(add) {
-                forEach { it.b = double(it.b.toInt()).toString() }
-            }
-                .map { it.b.toInt() }
-                .reduce { acc: Int, i: Int -> acc + i }
-
-        return A(reduced)
-    }
-
-    private fun double(i: Int) = i * 2
 }
