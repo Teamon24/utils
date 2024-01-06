@@ -2,8 +2,17 @@ package home.extensions
 
 object CollectionsExtensions {
 
-    @JvmStatic inline infix fun <T> Collection<T>.and(that: T) = ArrayList<T>(this.size + 1).apply { addAll(this); add(that) }
-    @JvmStatic inline infix fun <T> T.and(list: List<T>): List<T> = ArrayList(list).also { it.add(0, this) }
+    @JvmStatic inline infix fun <T> Collection<T>.and(that: T) =
+        ArrayList<T>(this.size + 1).also { it.addAll(this); it.add(that) }
+
+    @JvmStatic inline operator fun <T> Collection<T>.plus(that: T) =
+        ArrayList<T>(this.size + 1).also { it.addAll(this); it.add(that) }
+
+    @JvmStatic inline infix fun <T> T.and(list: List<T>): List<T> =
+        ArrayList<T>(list.size + 1).also { it.add(this); it.addAll(list); }
+
+    @JvmStatic inline operator fun <T> T.plus(list: List<T>): List<T> =
+        ArrayList<T>(list.size + 1).also { it.add(this); it.addAll(list); }
 
     @JvmStatic fun <K> Collection<K>.exclude(exception: K) = filter { it != exception }
     @JvmStatic fun <K> Collection<K>.exclude(vararg exceptions: K) = filter { it !in exceptions }
@@ -44,10 +53,11 @@ object CollectionsExtensions {
         absent: C,
         onAbsence: MutableCollection<C>.() -> Unit
     ) {
-        isEmpty { onAbsence(); return }
+        val source = this@ifAbsent
 
+        source.isEmpty { onAbsence(); return }
         absent.isEmpty {
-            this.hasEmpty { return }
+            source.hasEmpty { return }
         }
 
         find { collection -> collection.size == absent.size && collection.containsAll(absent) } ?: onAbsence()
@@ -59,8 +69,11 @@ object CollectionsExtensions {
     /**
      * If collection has empty element, lamba is invoked.
      */
-    @JvmStatic inline fun <E, C: Collection<E>> Collection<C>.hasEmpty(onTrue: () -> Unit) =
-        any { it.isEmpty() }.apply { if(this) onTrue() }
+    @JvmStatic inline fun <E, C: Collection<E>> Collection<C>.hasEmpty(onTrue: () -> Unit): Boolean {
+        val anyIsEmpty = any { it.isEmpty() }
+        if(anyIsEmpty) { onTrue() }
+        return anyIsEmpty
+    }
 
     @JvmStatic inline val <T> Collection<T>.isNotEmpty get() = isNotEmpty()
     @JvmStatic inline val <T> Collection<T>.isEmpty get() = isEmpty()

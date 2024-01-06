@@ -11,8 +11,6 @@ import kotlin.random.Random
 
 class MutableListCreationDslTest {
 
-    private val defaultValue = 0
-
     /**
      * Тест для [MutableListCreationDsl.mutableList]
      */
@@ -21,7 +19,7 @@ class MutableListCreationDslTest {
     fun consequentElementSettingTest() {
         val maxInt = Int.MAX_VALUE
 
-        val double = { it: Int -> it * 2 }
+        val double: (Int) -> Int = { it * 2 }
         val elements = MutableList(3) { randomInt() }
         val lastIndex = 6
         val withinIndices = 3..lastIndex
@@ -32,7 +30,7 @@ class MutableListCreationDslTest {
 
         val size = elements.size + withinIndices.size + sameElementIndices.size + fromElements.size
 
-        mutableList(size, defaultValue) {
+        mutableList(size) {
             elements.forEachIndexed { index, element ->
                 at(index) { element }
             }
@@ -72,7 +70,7 @@ class MutableListCreationDslTest {
         val fromElements = start..start + 3
         val intMin = Int.MIN_VALUE
 
-        mutableList(size = 0, defaultValue) {
+        mutableList(size = 0) {
             at(unit) { unit }
             within(withinIndices) { index -> index }
             from(start) { fromElements.toList() }
@@ -95,5 +93,5 @@ class MutableListCreationDslTest {
         }
     }
 
-    private fun defaultValues(first: Int, lastExclusive: Int) = (first until lastExclusive).map { 0 }.toList()
+    private fun defaultValues(first: Int, lastExclusive: Int) = (first until lastExclusive).map { null }.toList()
 }

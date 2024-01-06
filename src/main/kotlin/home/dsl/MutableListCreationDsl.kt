@@ -1,7 +1,6 @@
 package home.dsl
 
 import home.dsl.MutableListCreationDsl.mutableList
-import home.extensions.BooleansExtensions.thus
 import kotlin.random.Random
 
 object MutableListCreationDsl {
@@ -46,23 +45,24 @@ object MutableListCreationDsl {
      *          1, 3, 4, 5, 6
      *       ]
      */
-    fun <E> mutableList(size: Int = 0, defaultValue: E? = null, create: ListDslInfo<E?>.() -> Unit): MutableList<E?> {
-        return MutableList(size) { defaultValue }.apply { ListDslInfo<E?>(defaultValue, this).create() }
+    fun <E> mutableList(size: Int = 0, create: ListDslInfo<E?>.() -> Unit): MutableList<E?> {
+        return MutableList(size) { null as E? }.apply { ListDslInfo<E?>(this).create() }
     }
 
-    class ListDslInfo<E>(private val defaultValue: E?, private val mutableList: MutableList<E?>) {
+    @JvmInline
+    value class ListDslInfo<E>(private val mutableList: MutableList<E?>) {
 
         fun at(index: Int, block: (index: Int) -> E?) = apply {
             set(index, block(index))
         }
 
         fun set(index: Int, e: E?) = apply {
-            mutableList.initIfOutOfRange(index, defaultValue)
+            mutableList.initIfOutOfRange(index, null)
             mutableList[index] = e
         }
 
         fun add(index: Int, e: E?) = apply {
-            mutableList.initIfOutOfRange(index, defaultValue)
+            mutableList.initIfOutOfRange(index, null)
             mutableList.add(index, e)
         }
 
@@ -71,12 +71,12 @@ object MutableListCreationDsl {
         }
 
         fun within(indices: IntRange, block: (Int) -> E?) = apply {
-            (indices.first > indices.last) thus {
-                throw IllegalArgumentException("Indices are reversed in intRange: [${indices.first}, ${indices.last}]")
+            require(indices.first <= indices.last) {
+                "Indices shouldn't be reversed : [${indices.first}, ${indices.last}]"
             }
 
             indices.forEach { index ->
-                mutableList.initIfOutOfRange(index, defaultValue)
+                mutableList.initIfOutOfRange(index, null)
                 mutableList[index] = block(index)
             }
         }
@@ -85,7 +85,7 @@ object MutableListCreationDsl {
             val elements = block()
 
             (start..start + (elements.size - 1)).forEach { index ->
-                mutableList.initIfOutOfRange(index, defaultValue)
+                mutableList.initIfOutOfRange(index, null)
                 mutableList[index] = elements[index - start]
             }
         }
@@ -97,20 +97,5 @@ object MutableListCreationDsl {
                 }
             }
         }
-    }
-}
-
-private fun main() {
-    mutableList {
-        at(0) { Random(1).nextInt() }
-        at(1) { i -> 2 }
-        set(1, Long.MAX_VALUE)
-        within(2..6) { i -> when (i) { 4 -> Int.MAX_VALUE; else -> i * 2 }; }
-        within(7..12) { i -> 2 }
-        at(13) { 4 }
-        from(14) { listOf(1, 3, 4, 5, 6) }
-        add(0, Int.MIN_VALUE)
-    }.apply {
-        println(this)
     }
 }

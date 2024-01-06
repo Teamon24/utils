@@ -3,9 +3,15 @@ package home.extensions
 import home.IndicesCartesianProduct
 import home.dsl.JUnit5ArgumentsDsl.args
 import home.dsl.JUnit5ArgumentsDsl.stream
+import home.extensions.CollectionsExtensions.and
 import home.extensions.CollectionsExtensions.containsOnly
+import home.extensions.CollectionsExtensions.doIf
 import home.extensions.CollectionsExtensions.exclude
 import home.extensions.CollectionsExtensions.ifAbsent
+import home.extensions.CollectionsExtensions.isEmpty
+import home.extensions.CollectionsExtensions.isNotEmpty
+import home.extensions.CollectionsExtensions.plus
+import home.extensions.IntegersExtensions.isEven
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,8 +19,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.test.assertEquals
-import home.extensions.CollectionsExtensions.and
-import home.extensions.CollectionsExtensions.doIf
 
 /**
  * Tests for [CollectionsExtensions].
@@ -22,12 +26,49 @@ import home.extensions.CollectionsExtensions.doIf
 class CollectionsExtensionsTest {
 
     /**
+     * Test for [CollectionsExtensions.isEmpty].
+     */
+    @Test
+    fun isEmptyTest() {
+        val initial = 0
+        var value = initial
+        mutableListOf(1, 2, 3, 4).isEmpty {
+            value = Int.MAX_VALUE
+        }
+        Assertions.assertEquals(value, initial)
+    }
+
+    /**
+     * Test for [CollectionsExtensions.isNotEmpty].
+     */
+    @Test
+    fun isNotEmptyTest() {
+        val initial = 0
+        var value = initial
+        val maxValue = Int.MAX_VALUE
+        mutableListOf(1, 2, 3, 4).isNotEmpty {
+            value = maxValue
+        }
+        Assertions.assertEquals(value, maxValue)
+    }
+
+    /**
      * Test for [CollectionsExtensions.and].
      */
     @Test
-    fun plusTest() {
+    fun andPlusTest() {
+
+        Assertions.assertEquals(listOf(1, 2), 1 + listOf(2))
+        Assertions.assertEquals(listOf(1, 2), listOf(1) + 2)
+
+        Assertions.assertNotEquals(listOf(1, 2), 1 + listOf(3))
+        Assertions.assertNotEquals(listOf(1, 2), 1 + listOf(2, 3))
+
+        Assertions.assertNotEquals(listOf(1, 2), listOf(1, 2) + 3)
+        Assertions.assertNotEquals(listOf(1, 2), listOf(1) + 3)
+
         Assertions.assertEquals(listOf(1, 2), 1 and listOf(2))
-        Assertions.assertEquals(listOf(1, 2), listOf(1, 2))
+        Assertions.assertEquals(listOf(1, 2), listOf(1) and 2)
 
         Assertions.assertNotEquals(listOf(1, 2), 1 and listOf(3))
         Assertions.assertNotEquals(listOf(1, 2), 1 and listOf(2, 3))
