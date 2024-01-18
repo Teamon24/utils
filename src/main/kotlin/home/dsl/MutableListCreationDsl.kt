@@ -1,12 +1,9 @@
 package home.dsl
 
-import home.dsl.MutableListCreationDsl.mutableList
-import kotlin.random.Random
-
 object MutableListCreationDsl {
 
     /**
-     * ### Пример использования:
+     * ### Example:
      * ```
      *             mutableList {
      *                 at(0) { Random(1).nextInt() }
@@ -27,7 +24,7 @@ object MutableListCreationDsl {
      *             }
      *
      * ```
-     * ###Вывод в консоль:
+     * ###Console output:
      *       [
      *          //[0]:       add(0, Int.MIN_VALUE)
      *          -2147483648,

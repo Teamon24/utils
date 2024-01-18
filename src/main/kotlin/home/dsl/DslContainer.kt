@@ -5,13 +5,13 @@ value class DslContainer<E>(val elements: MutableList<E> = mutableListOf()) {
     inline operator fun E.unaryPlus(): E { return also { elements.add(it) } }
 
     /**
-     * Метод был добавлен, т.к. [DslContainer.unaryPlus] не может перекрыть [Int.unaryPlus], [Double.unaryPlus]
+     * Method was added as [DslContainer.unaryPlus] can't override methods [Int.unaryPlus], [Double.unaryPlus]
      *
-     *        'не добавляет в dls-контейнер'                'работает'
-     *                вызов [Int.unaryPlus]
+     *       'does not add to dls-container'                'works'
+     *                 call [Int.unaryPlus]
      *                           dsl { +1 }       'vs'       dsl { this + 1   }
      *
-     *             вызов [Double.unaryPlus]
+     *              call [Double.unaryPlus]
      *                         dsl { +1.0 }       'vs'       dsl { this + 1.0 }
      *
      */

@@ -12,7 +12,7 @@ import kotlin.random.Random
 class MutableListCreationDslTest {
 
     /**
-     * Тест для [MutableListCreationDsl.mutableList]
+     * Test for [MutableListCreationDsl.mutableList].
      */
     @Test
     @DisplayName("Case: when elements setting happens consequently (setting to 0, then 1, 2 and etc.)")
@@ -59,7 +59,7 @@ class MutableListCreationDslTest {
     private fun randomInt() = Random(System.currentTimeMillis()).nextInt()
 
     /**
-     * Тест для [MutableListCreationDsl.mutableList].
+     * Test for [MutableListCreationDsl.mutableList].
      */
     @Test
     @DisplayName("Case: when elements setting happens to empty list (out of bound situation appears)")

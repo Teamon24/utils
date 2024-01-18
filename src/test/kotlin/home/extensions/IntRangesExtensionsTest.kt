@@ -14,12 +14,12 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 /**
- * Тест для [IntRangesExtensions]
+ * Test for [IntRangesExtensions].
  */
 internal class IntRangesExtensionsTest {
 
     /**
-     * Тест для [IntRangesExtensions.size]
+     * Test for [IntRangesExtensions.size].
      */
     @Test
     fun getSize() {
@@ -31,7 +31,7 @@ internal class IntRangesExtensionsTest {
     }
 
     /**
-     * Тест для [IntRangesExtensions.range] и [IntRangesExtensions.until]
+     * Test for [IntRangesExtensions.range] and [IntRangesExtensions.until].
      */
     @ParameterizedTest
     @MethodSource("rangeAndUtilTestData")
