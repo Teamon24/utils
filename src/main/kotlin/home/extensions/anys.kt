@@ -1,5 +1,6 @@
 package home.extensions
 
+import home.extensions.StringsExtensions.decapitalized
 import home.extensions.StringsExtensions.lowercaseFirst
 
 object AnysExtensions {
@@ -47,7 +48,9 @@ object AnysExtensions {
     @JvmStatic inline val <T> T?.isNull get() = this == null
     @JvmStatic inline fun <T> T?.isNull(onTrue: () -> Unit) { if (isNull) { onTrue() } }
 
+    @Deprecated("Use decapitalizedSimpleName instead.", ReplaceWith("this.decapitalizedSimpleName"))
     @JvmStatic inline val Any.lowercaseFirstSimpleName: String get() = javaClass.simpleName.lowercaseFirst
+    @JvmStatic inline val Any.decapitalizedSimpleName: String get() = javaClass.simpleName.decapitalized
 }
 
 
