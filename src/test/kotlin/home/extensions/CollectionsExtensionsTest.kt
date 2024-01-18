@@ -111,10 +111,10 @@ class CollectionsExtensionsTest {
      */
     @ParameterizedTest
     @MethodSource("excludeByPredicateTestData")
-    fun <E, T : Collection<E>> excludeByPredicateTest(
-        collection: MutableCollection<T>,
-        expected: MutableCollection<T>,
-        predicate: (T) -> Boolean
+    fun <E> excludeByPredicateTest(
+        collection: MutableCollection<Collection<E>>,
+        expected: MutableCollection<Collection<E>>,
+        predicate: (Collection<E>) -> Boolean
     ) {
         val size = collection.size
         val exclude = collection.exclude(predicate)

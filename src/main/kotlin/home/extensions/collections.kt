@@ -1,22 +1,32 @@
 package home.extensions
 
+
 object CollectionsExtensions {
 
-    @JvmStatic inline infix fun <T> Collection<T>.and(that: T) =
+    @JvmStatic inline infix    fun <reified T> Collection<T>.and (that: T) =
         ArrayList<T>(this.size + 1).also { it.addAll(this); it.add(that) }
 
-    @JvmStatic inline operator fun <T> Collection<T>.plus(that: T) =
+    @JvmStatic inline operator fun <reified T> Collection<T>.plus(that: T) =
         ArrayList<T>(this.size + 1).also { it.addAll(this); it.add(that) }
 
-    @JvmStatic inline infix fun <T> T.and(list: List<T>): List<T> =
-        ArrayList<T>(list.size + 1).also { it.add(this); it.addAll(list); }
 
-    @JvmStatic inline operator fun <T> T.plus(list: List<T>): List<T> =
-        ArrayList<T>(list.size + 1).also { it.add(this); it.addAll(list); }
 
-    @JvmStatic fun <K> Collection<K>.exclude(exception: K) = filter { it != exception }
-    @JvmStatic fun <K> Collection<K>.exclude(vararg exceptions: K) = filter { it !in exceptions }
-    @JvmStatic fun <K> Collection<K>.exclude(predicate: (K) -> Boolean) = filter { !(predicate(it)) }
+    @JvmStatic inline infix    fun <reified T> T.and (collection: Collection<T>): List<T> =
+        ArrayList<T>(collection.size + 1).also { it.add(this); it.addAll(collection); }
+
+    @JvmStatic inline operator fun <reified T> T.plus(collection: Collection<T>): List<T> =
+        ArrayList<T>(collection.size + 1).also { it.add(this); it.addAll(collection); }
+
+
+
+    @JvmStatic inline operator fun <reified T> MutableCollection<T>.plus(that: T) = this.add(that)
+    @JvmStatic inline          fun <reified T> MutableCollection<T>.and (that: T) = this.add(that)
+
+
+    @JvmStatic inline fun <reified K> Collection<K>.exclude(exception: K) = filter { it != exception }
+    @JvmStatic inline fun <reified K> Collection<K>.exclude(vararg exceptions: K) = filter { it !in exceptions }
+    @JvmStatic inline fun <reified K> Collection<K>.exclude(predicate: (K) -> Boolean) = filter { !(predicate(it)) }
+
 
     /**
      * return "this" if "this" is MutableList else creates MutableList with elements of "this".
