@@ -95,15 +95,6 @@ class AnysExtensionsTest {
     @ParameterizedTest
     @MethodSource("invokeTestData")
     fun invokeTest(any: Any?, expected: Int) {
-
-        val invoked = { any.invoke {  }}
-        if (any == null) {
-            Assertions.assertThrows(IllegalArgumentException::class.java) {
-                invoked()
-            }
-            return
-        }
-
         var result = 0
         any.invoke {
             result = 1

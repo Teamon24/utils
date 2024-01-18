@@ -31,11 +31,16 @@ object AnysExtensions {
     }
 
     /**
-     * Analogical method as [also], but [so] does not return anything.
+     * Analogical method as [also], but [so] returns [Unit].
+     *
+     * Ignores [body] if receiver [T] is null.
      */
-    @JvmStatic inline fun <T> T.so(body: (T) -> Unit) { requireNotNull(this); body(this) }
+    @JvmStatic inline fun <T> T.so(body: T.() -> Unit) { this?.body() }
 
-    @JvmStatic inline operator fun <T> T.invoke(body: T.() -> Unit) { requireNotNull(this).body() }
+    /**
+     * Ignores [body] if receiver [T] is null.
+     */
+    @JvmStatic inline operator fun <T> T.invoke(body: T.() -> Unit) { this?.body() }
 
     @JvmStatic inline fun <T> T.removeFrom(collection: MutableCollection<T>) = collection.remove(this)
     @JvmStatic inline fun <T> T.removeFrom(map: MutableMap<T, *>) = map.remove(this)
