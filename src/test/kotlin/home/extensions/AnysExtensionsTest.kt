@@ -1,10 +1,14 @@
 package home.extensions
 
+import home.dsl.JUnit5ArgumentsDsl.args
+import home.dsl.JUnit5ArgumentsDsl.stream
 import home.extensions.AnysExtensions.invoke
 import home.extensions.AnysExtensions.isNotUnit
 import home.extensions.AnysExtensions.plus
 import home.extensions.AnysExtensions.and
+import home.extensions.AnysExtensions.isNull
 import home.extensions.AnysExtensions.notIn
+import home.extensions.AnysExtensions.removeFrom
 import home.extensions.CollectionsExtensions.and
 import home.extensions.CollectionsExtensions.plus
 import org.junit.jupiter.api.Assertions
@@ -15,6 +19,45 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 class AnysExtensionsTest {
+
+    /**
+     * Test for [AnysExtensions.removeFrom] for [MutableMap]
+     */
+    @ParameterizedTest
+    @MethodSource("removeFromTestData")
+    internal fun removeFromMutableMapTest(map: MutableMap<Int,String>, removables: Collection<Int>) {
+        val initialSize = map.size
+
+        removables.forEach { removable ->
+            removable.removeFrom(map)
+        }
+
+        Assertions.assertEquals(initialSize - removables.size, map.size)
+        removables.forEach { removable ->
+            Assertions.assertTrue(removable !in map.keys)
+        }
+    }
+
+    /**
+     * Test for [AnysExtensions.removeFrom] for [MutableCollection]
+     */
+    @ParameterizedTest
+    @MethodSource("removeFromCollectionTestData")
+    internal fun removeFromMutableCollectionTest(
+        mutableCollection: MutableCollection<Int>,
+        removables: Collection<Int>
+    ) {
+        val initialSize = mutableCollection.size
+
+        removables.forEach { removable ->
+            removable.removeFrom(mutableCollection)
+        }
+
+        Assertions.assertEquals(initialSize - removables.size, mutableCollection.size)
+        removables.forEach { removable ->
+            Assertions.assertTrue(removable !in mutableCollection)
+        }
+    }
 
     /**
      * Test for [AnysExtensions.notIn]
@@ -52,8 +95,16 @@ class AnysExtensionsTest {
     @ParameterizedTest
     @MethodSource("invokeTestData")
     fun invokeTest(any: Any?, expected: Int) {
-        var result = 0
 
+        val invoked = { any.invoke {  }}
+        if (any == null) {
+            Assertions.assertThrows(IllegalArgumentException::class.java) {
+                invoked()
+            }
+            return
+        }
+
+        var result = 0
         any.invoke {
             result = 1
         }.also {
@@ -81,6 +132,7 @@ class AnysExtensionsTest {
         const val resultOnTrue = 1
         const val resultOnFalse = 1
 
+
         @JvmStatic
         fun invokeTestData(): Stream<Arguments> {
             return Stream.of(
@@ -95,6 +147,42 @@ class AnysExtensionsTest {
                 Arguments.of(Any(), 1),
                 Arguments.of(Unit, 0),
             )
+        }
+
+        @JvmStatic
+        fun removeFromTestData(): Stream<Arguments> {
+            val size = 10
+            return stream {
+                val removables = arrayListOf<Int>()
+                (1..size).forEach { removable ->
+                    removables + removable
+                    args {
+                        + hashMapOf<Int, String>().apply {
+                            (1..size).forEach {
+                                put(it, "$it")
+                            }
+                        }
+                        + removables.toList()
+                    }
+                }
+            }
+        }
+
+        @JvmStatic
+        fun removeFromCollectionTestData(): Stream<Arguments> {
+            val size = 10
+            return stream {
+                val removables = arrayListOf<Int>()
+                (1..size).forEach { removable ->
+                    removables + removable
+                    args {
+                        + mutableListOf<Int>().apply {
+                            (1..size).forEach(this::add)
+                        }
+                        + removables.toList()
+                    }
+                }
+            }
         }
     }
 }

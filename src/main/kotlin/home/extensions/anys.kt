@@ -6,8 +6,9 @@ import home.extensions.StringsExtensions.lowercaseFirst
 object AnysExtensions {
 
     /**
-     * org.horns.hooves.Horn@12as3 -> Horn@12as3
-     * org.horns.hooves.Horn -> Horn
+     * returns *"Horn@12as3"* if receiver is object *"org.horns.hooves.Horn@12as3"*
+     *
+     * returns *"Horn"* if receiver is class *"org.horns.hooves.Horn"*
      */
     @JvmStatic inline val Any.name: String
         get() {
@@ -29,27 +30,32 @@ object AnysExtensions {
         }
     }
 
+    /**
+     * Analogical method as [also], but [so] does not return anything.
+     */
+    @JvmStatic inline fun <reified T> T.so(body: (T) -> Unit) { requireNotNull(this); body(this) }
 
-    @JvmStatic inline operator fun <T> T.invoke(body: T.() -> Unit) { this?.body() }
+    @JvmStatic inline operator fun <reified T> T.invoke(body: T.() -> Unit) { requireNotNull(this).body() }
 
-    @JvmStatic inline fun <T> T.removeFrom(collection: MutableCollection<T>) = collection.remove(this)
-    @JvmStatic inline fun <T> T.removeFrom(map: MutableMap<T, *>) = map.remove(this)
+    @JvmStatic inline fun <reified T> T.removeFrom(collection: MutableCollection<T>) = collection.remove(this)
+    @JvmStatic inline fun <reified T> T.removeFrom(map: MutableMap<T, *>) = map.remove(this)
 
-    @JvmStatic inline fun <T> T.addTo(collection: MutableCollection<T>) = collection.add(this)
+    @JvmStatic inline fun <reified T> T.addTo(collection: MutableCollection<T>) = collection.add(this)
 
-    @JvmStatic inline infix fun <T> T.notIn(collection: Collection<T>) = this !in collection
-    @JvmStatic inline       fun <T> T.notIn(vararg ts: T) = this !in ts
+    @JvmStatic inline infix fun <reified T> T.notIn(collection: Collection<T>) = this !in collection
+    @JvmStatic inline       fun <reified T> T.notIn(vararg ts: T) = this !in ts
 
-    @JvmStatic inline operator fun <T> T.plus(that: T) = listOf(this, that)
-    @JvmStatic inline infix fun <T> T.and(that: T) = listOf(this, that)
+    @JvmStatic inline operator fun <reified T> T.plus(that: T) = listOf(this, that)
+    @JvmStatic inline infix    fun <reified T> T.and(that: T) = listOf(this, that)
 
-    @JvmStatic inline fun <T> T.anyOf(vararg ts: T) = ts.any { it == this }
+    @JvmStatic inline fun <reified T> T.anyOf(vararg ts: T) = ts.any { it == this }
 
-    @JvmStatic inline val <T> T?.isNull get() = this == null
-    @JvmStatic inline fun <T> T?.isNull(onTrue: () -> Unit) { if (isNull) { onTrue() } }
+    @JvmStatic inline val <reified T> T?.isNull get() = this == null
+    @JvmStatic inline fun <reified T> T?.isNull(onTrue: (T?) -> Unit) { if (isNull) { onTrue(this) } }
 
     @Deprecated("Use decapitalizedSimpleName instead.", ReplaceWith("this.decapitalizedSimpleName"))
     @JvmStatic inline val Any.lowercaseFirstSimpleName: String get() = javaClass.simpleName.lowercaseFirst
+
     @JvmStatic inline val Any.decapitalizedSimpleName: String get() = javaClass.simpleName.decapitalized
 }
 
