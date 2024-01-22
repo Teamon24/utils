@@ -46,8 +46,103 @@ object MutableListCreationDsl {
         return MutableList(size) { null as E? }.apply { ListDslInfo<E?>(this).create() }
     }
 
+    fun <E> list(size: Int = 0, create: ListDslInfo<E?>.() -> Unit): List<E?> {
+        return MutableList(size) { null as E? }.apply { ListDslInfo<E?>(this).create() }
+    }
+
+    /**
+     * ### Example
+     * ```
+     *      list {
+     *          +flat {
+     *               -listOf(1, 2, 3);
+     *               -listOf(4, 5)
+     *          }
+     *          +flat {
+     *               -listOf(7, 8);
+     *               -listOf(9, 10, 11)
+     *               -(12..20).map { it -> it * 2 }
+     *          }
+     *          +flat {
+     *               -flat {
+     *                   +"A"; -listOf(21, 22); -listOf(23, 24); +null
+     *               }
+     *               -list {
+     *                   +"B"
+     *                   +flat { -listOf(25, 26); -listOf(27, 28); }
+     *                   +null
+     *               }
+     *          }
+     *      }.apply {
+     *          println(this)
+     *      }
+     *
+     * ```
+     * ### Console output
+     * ```
+     *      //result of list
+     *      [
+     *          //result of flat
+     *          [
+     *              1, 2,  //listOf(1 ,2, 3);
+     *              3, 4, 5 //listOf(4, 5)
+     *          ],
+     *          //result of flat
+     *          [
+     *              7, 8,  //listOf(7, 8);
+     *              9, 10, 11,  //listOf(9, 10, 11)
+     *              24, 26, 28, 30, 32, 34, 36, 38, 40 //(12..20).map { it -> it * 2 }
+     *         ]
+     *         //result of flat[ flat, list[flat] ]
+     *         ["A", 21, 22, 23, 24, null, "B", 25, 26, 27, 28, null]
+     *      ]
+     * ```
+     */
+    fun <E> flat(size: Int = 0, create: FlattenDslInfo<E?>.() -> Unit): List<E?> {
+        return MutableList(size) { null as E? }.apply {
+            FlattenDslInfo<E?>(this).create()
+        }
+    }
+
+
+    @JvmInline
+    value class FlattenDslInfo<E>(private val mutableCollection: MutableCollection<E?>) {
+        operator fun E.unaryPlus() = add(this)
+
+        operator fun Iterable<E>.unaryMinus() = apply {
+            mutableCollection.addAll(traverse(this, arrayListOf()))
+        }
+
+        operator fun Array<E>.unaryMinus() = apply {
+            mutableCollection.addAll(traverse(this as Array<Any?>, arrayListOf()))
+        }
+
+        private fun traverse(collection: Iterable<Any?>, container: MutableCollection<E?>): MutableCollection<E?> {
+            collection.forEach { check(it, container) }
+            return container
+        }
+
+        private fun traverse(array: Array<Any?>, container: MutableCollection<E?>): MutableCollection<E?> {
+            array.forEach { check(it, container) }
+            return container
+        }
+
+        private fun check(it: Any?, container: MutableCollection<E?>) {
+            when (it) {
+                is Iterable<*> -> traverse(it, container)
+                is Array<*> -> traverse(it as Array<Any?>, container)
+                else -> container.add(it as E?)
+            }
+        }
+
+        fun add(e: E?) = apply { mutableCollection.add(e) }
+    }
+
     @JvmInline
     value class ListDslInfo<E>(private val mutableList: MutableList<E?>) {
+
+        operator fun E.unaryPlus() = add(this)
+        operator fun E.unaryMinus() = mutableList.remove(this)
 
         fun at(index: Int, block: (index: Int) -> E?) = apply {
             set(index, block(index))

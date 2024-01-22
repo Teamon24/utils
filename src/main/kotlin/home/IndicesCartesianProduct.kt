@@ -60,6 +60,16 @@ private constructor(private val lengths: IntArray) : Iterable<IntArray>, Mutable
             return IndicesCartesianProduct(lengths)
         }
 
+        fun pair(lists: List<List<*>>): List<Pair<Any?, Any?>> {
+            val product = tuple(lists, expectedSize = 2)
+            return product.map { list -> list[0] to list[1] }
+        }
+
+        fun triple(lists: List<List<*>>): List<Triple<Any?, Any?, Any?>> {
+            val product = tuple(lists, expectedSize = 3)
+            return product.map { list -> Triple(list[0], list[1], list[2])  }
+        }
+
         fun product(lists: List<List<*>>): List<List<*>> {
             val lengths = IntArray(lists.size)
             for (i in lists.indices) {
@@ -79,6 +89,16 @@ private constructor(private val lengths: IntArray) : Iterable<IntArray>, Mutable
                 result.add(objects)
             }
             return result
+        }
+
+        private fun tuple(lists: List<List<*>>, expectedSize: Int): List<List<*>> {
+            val product = product(lists)
+            product.forEach { list ->
+                require(list.size == expectedSize) {
+                    "To pair cartesian product each result list in product should has size equals $expectedSize"
+                }
+            }
+            return product
         }
     }
 }
