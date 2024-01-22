@@ -1,6 +1,6 @@
 package home.extensions
 
-import home.IndicesCartesianProduct
+import home.CartesianProduct
 import home.dsl.JUnit5ArgumentsDsl.args
 import home.dsl.JUnit5ArgumentsDsl.stream
 import home.extensions.CollectionsExtensions.and
@@ -193,7 +193,7 @@ class CollectionsExtensionsTest {
             val empty = ""
             val string = "string"
             val elements = arrayListOf(null, blank, string, empty)
-            val collections = IndicesCartesianProduct.product(elements, elements)
+            val collections = CartesianProduct.elements(elements, elements)
 
             val expectedCollection = arrayListOf(
                 arrayListOf(null, string),

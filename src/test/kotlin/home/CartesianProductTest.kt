@@ -4,50 +4,63 @@ import home.dsl.JUnit5ArgumentsDsl.args
 import home.dsl.JUnit5ArgumentsDsl.stream
 import home.dsl.MutableListCreationDsl.list
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
-internal class IndicesCartesianProductTest {
+internal class CartesianProductTest {
 
     /**
-     * Test for [IndicesCartesianProduct.product].
+     * Test for [CartesianProduct.pair].
+     */
+    @Test
+    fun pairTest() {
+        val firstList = listOf("1", "2", null)
+        val secondList = listOf("3", "4", null)
+        assertEquals(
+            list {
+                firstList.forEach { i1 ->  secondList.forEach { i2 -> + (i1 to i2) } }
+            },
+        CartesianProduct.pair(
+            list {
+                +firstList
+                +secondList
+            }
+        ))
+    }
+
+    /**
+     * Test for [CartesianProduct.elements].
      */
     @ParameterizedTest
     @MethodSource("pairTestData")
     fun pairTest(args: List<List<*>>, expected: List<Pair<*, *>>) {
-        val actual = IndicesCartesianProduct.pair(args)
+        val actual = CartesianProduct.pair(args)
         assertIterableEquals(expected, actual)
     }
 
     /**
-     * Test for [IndicesCartesianProduct.product].
+     * Test for [CartesianProduct.elements].
      */
     @ParameterizedTest
     @MethodSource("productTestData")
     fun productTest(args: List<List<*>>, expected: List<List<*>>) {
-        val actual = IndicesCartesianProduct.product(args)
+        val actual = CartesianProduct.elements(args)
         assertIterableEquals(expected, actual)
     }
 
     /**
-     * Test for [IndicesCartesianProduct.indicesProduct].
+     * Test for [CartesianProduct.indices].
      */
     @ParameterizedTest
     @MethodSource("indicesProductTestData")
-    fun indicesProductTest(args: List<List<*>>, expecteds: List<IntArray>) {
-        val actual = IndicesCartesianProduct.indicesProduct(args)
-        val iterator = actual.iterator()
-        var i = 0
-        while (iterator.hasNext()) {
-            val actual = iterator.next()
-            val expected = expecteds[i]
-            assertArrayEquals(expected, actual)
-            i++
+    fun indicesProductTest(args: List<List<*>>, expected: List<IntArray>) {
+        val actual = CartesianProduct.indices(args)
+        actual.forEachIndexed { index, indices ->
+            assertArrayEquals(expected[index], indices)
         }
-
-        assertEquals(expecteds.size, i)
     }
 
     companion object {
